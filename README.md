@@ -62,19 +62,19 @@ After pressing <Enter> you should see the result printed in the main text area (
 
 Example of results for the 1st of the above queries:
 
-Search result (parsed):
- -- [1] address.street : "Seagirt Avenue"
- -- [2] address.street : "Jericho Turnpike"
- -- [3] address.street : "West   34 Street"
- -- [4] address.street : "46 Street"
- -- [5] address.street : "Madison Avenue"
- -- [6] address.street : "3 Avenue"
+	Search result (parsed):
+	 -- [1] address.street : "Seagirt Avenue"
+	 -- [2] address.street : "Jericho Turnpike"
+	 -- [3] address.street : "West   34 Street"
+	 -- [4] address.street : "46 Street"
+	 -- [5] address.street : "Madison Avenue"
+	 -- [6] address.street : "3 Avenue"
 
 Example of results for the 2nd of the above queries:
 
-Search result (parsed):
- -- [1] restaurant_id : "40359480"
- -- [2] restaurant_id : "41269872"
+	Search result (parsed):
+	 -- [1] restaurant_id : "40359480"
+	 -- [2] restaurant_id : "41269872"
 
 7
 You can enter other port and host in the topmost left text fields, and press "Connect to DB...", if your MongoDB is running at other IP address. 
