@@ -1,23 +1,8 @@
 package org.mongo.client;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.swing.text.JTextComponent;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 
 /*
  * An alternative MongoClient with its GUI
@@ -29,7 +14,6 @@ public class ClientGUI extends JFrame implements ActionListener {
   private JLabel label;
   // to hold the queries
   private JTextField tf;
-  private JTextComponent tc;
   // to hold the server address an the port number
   private JTextField tfServer, tfPort, tfDbName;
   // to Logout and get the list of the users
@@ -56,11 +40,7 @@ public class ClientGUI extends JFrame implements ActionListener {
     defaultDbName = "test";
 
     // The NorthPanel with:
-
-    JPanel northPanel = new JPanel(new GridLayout(2, 1));
-    JPanel topPanel = new JPanel(new GridBagLayout());
-    GridBagConstraints c = new GridBagConstraints();
-    JPanel subNorthPanel = new JPanel(new GridLayout(4, 1));
+    JPanel northPanel = new JPanel(new GridLayout(3, 1));
     // the server name anmd the port number
     JPanel serverAndPort = new JPanel(new GridLayout(1, 5, 1, 3));
     // the two JTextField with default value for server address and port number
@@ -81,27 +61,13 @@ public class ClientGUI extends JFrame implements ActionListener {
     northPanel.add(serverAndPort);
 
     // the Label and the TextField
-    label = new JLabel("Type SQL-expression and press <Enter>", SwingConstants.CENTER);
+    label = new JLabel("Enter your username below", SwingConstants.CENTER);
     northPanel.add(label);
-    tf = new JTextField("Type an SQL expression and press <Enter>");
-    tc = new JTextArea("Type here ..........", 4, 80);
-//    tf.setBackground(Color.WHITE);
-    tc.setBackground(Color.WHITE);
-//    northPanel.add(tf);
-    subNorthPanel.add(tc, BorderLayout.CENTER);
-//    topPanel.add(northPanel, BorderLayout.NORTH);
-    c.fill = GridBagConstraints.NORTH;
-    c.gridx = 0;
-    c.gridy = 0;
-    topPanel.add(northPanel, c);
-//    topPanel.add(subNorthPanel, BorderLayout.CENTER);
-    c.fill = GridBagConstraints.CENTER;
-    c.gridx = 0;
-    c.gridy = 1;
-    topPanel.add(subNorthPanel, c);
-    tc.setEditable(true);
-//    add(northPanel, BorderLayout.NORTH);
-    add(topPanel, BorderLayout.NORTH);
+    tf = new JTextField("Type SQL-expression and press <Enter>");
+    // tf = new JTextArea("Type SQL-expression and press <Enter>", 7, 80);
+    tf.setBackground(Color.WHITE);
+    northPanel.add(tf);
+    add(northPanel, BorderLayout.NORTH);
 
     // The CenterPanel which is the console window
     ta = new JTextArea("", 80, 80);

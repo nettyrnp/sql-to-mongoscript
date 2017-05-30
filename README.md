@@ -1,2 +1,79 @@
 # sql-to-mongoscript
 An alternative MongoDB client, able to convert SQL to mongo script
+
+Usage
+
+Prerequisites
+
+You must have a running mongod instance in order to import data into the database.
+
+Procedure
+
+1
+Retrieve the restaurants data.
+
+Retrieve the dataset from https://raw.githubusercontent.com/mongodb/docs-assets/primer-dataset/primer-dataset.json and save to a file named primer-dataset.json.
+
+2
+Import data into the collection.
+
+In the system shell or command prompt, use mongoimport to insert the documents into the restaurants collection in the test database. If the collection already exists in the test database, the operation will drop the restaurants collection first.
+
+mongoimport --db test --collection restaurants --drop --file ~/downloads/primer-dataset.json
+The mongoimport connects to a mongod instance running on localhost on port number 27017. The --file option provides the path to the data to import, in this case, ~/downloads/primer-dataset.json.
+
+To import data into a mongod instance running on a different host or port, specify the hostname or port by including the --host and the --port options in your mongoimport command.
+
+3
+Run the AlterMongoClient by double-clicking the file "mongoclient-0.0.1-SNAPSHOT-jar-with-dependencies.jar"
+A window entitled "Alternative Mongo Client [Quer..." should pop-up.
+
+4
+In this window press "Connect to DB 'test'" button. 
+
+5
+Paste your SQL query into the field entitled "Enter your username below" and press <Enter>.
+For example, you can use one of the following SQL queries:
+	
+	SELECT address.street 
+		FROM restaurants 
+		WHERE address.zipcode=11691 AND address.street=Seagirt Avenue 
+			OR restaurant_id>=41269687 AND restaurant_id<41269772 Order by restaurant_id desc 
+
+	SELECT restaurant_id FROM restaurants 
+		WHERE address.zipcode=11691 
+			AND address.street=Seagirt Avenue 
+			OR restaurant_id>=40359480 
+			AND restaurant_id<40359485 
+			Order by address.zipcode
+
+	SELECT restaurant_id FROM restaurants WHERE address.zipcode=11691 AND address.street=Seagirt Avenue OR restaurant_id>=41269687 AND restaurant_id<41269872 Order by restaurant_id desc
+	
+	SELECT address.zipcode FROM restaurants WHERE address.zipcode=11691 AND address.street=Seagirt Avenue OR restaurant_id=40359480 OR address.street=Beach 25 Street GROUP BY address.street ORDER BY restaurant_id DESC SKIP 1 LIMIT 2
+	
+	SELECT address.street FROM restaurants WHERE address.zipcode=11691 AND address.street=Seagirt Avenue OR restaurant_id>=40359480 AND restaurant_id<40359580
+	
+	SELECT address.street FROM restaurants WHERE address.zipcode=11691 AND address.street=Seagirt Avenue OR restaurant_id>=40359480 AND restaurant_id<40359485 Order by address.zipcode
+
+
+6
+After pressing <Enter> you should see the result printed in the main text area. 
+
+Example of results for the 1st of the above queries:
+
+Search result (parsed):
+ -- [1] address.street : "Seagirt Avenue"
+ -- [2] address.street : "Jericho Turnpike"
+ -- [3] address.street : "West   34 Street"
+ -- [4] address.street : "46 Street"
+ -- [5] address.street : "Madison Avenue"
+ -- [6] address.street : "3 Avenue"
+
+Example of results for the 2nd of the above queries:
+
+Search result (parsed):
+ -- [1] restaurant_id : "40359480"
+ -- [2] restaurant_id : "41269872"
+
+ 
+ 
