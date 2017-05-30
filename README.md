@@ -25,10 +25,12 @@ The mongoimport connects to a mongod instance running on localhost on port numbe
 To import data into a mongod instance running on a different host or port, specify the hostname or port by including the --host and the --port options in your mongoimport command.
 
 3
-Double-click the file "mongoclient.jar". A program window entitled "Alternative Mongo Client..." should appear.
+Download "sql-to-mongoscript", go to the "sql-to-mongoscript" folder and run the command "mvn clean package" (you should have Maven installed before this).
+In folder "target" double-click the file "mongoclient-0.0.1-SNAPSHOT-jar-with-dependencies.jar".
+A program window entitled "Alternative Mongo Client..." should pop-up.
 
 4
-In this window press "Connect to DB 'test'" button. 
+In the window press "Connect to DB 'test'" button. 
 
 5
 Paste your SQL query into the field entitled "Paste your SQL query here..." and press <Enter>.
