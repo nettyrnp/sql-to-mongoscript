@@ -32,11 +32,11 @@ public class ClientGUI extends JFrame implements ActionListener {
   private boolean bPrettifyJson;
 
   // Constructor connection receiving a socket number
-  ClientGUI(String host, int port) {
+  public ClientGUI(String host, int port) {
 
     super("Alternative Mongo Client [Quering MongoDB via SQL-scripts]");
-    defaultPort = port;
-    defaultHost = host;
+    defaultPort = port; // TODO to be used in future
+    defaultHost = host; // TODO to be used in future
     defaultDbName = "test";
 
     // The NorthPanel with:

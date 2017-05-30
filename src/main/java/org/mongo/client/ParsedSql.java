@@ -20,13 +20,14 @@ public class ParsedSql {
   private int _skip = -1;
   private int _limit = -1;
  
-//  private static String regexp = "(?i:(SELECT ((\\*)|((\\w+)(\\.(\\*|\\w+))*))) (FROM (\\w+)) (WHERE (\\w+.*)))";
   private static String regexp = "(?i:\\s*(SELECT\\s+((\\*)|((\\w+)(\\.(\\*|\\w+))*)))\\s+(FROM\\s+(\\w+))\\s+(WHERE\\s+(\\w+.*?))(\\s+(GROUP BY)\\s+(\\w+.*?))?(\\s+(ORDER BY)\\s+(\\w+.*?)(\\s+(ASC|DESC))?)?(\\s+(SKIP)\\s+(\\w+.*?))?(\\s+(LIMIT)\\s+(\\w+.*?))?\\s*)";
   private static String whereRegexp = "(?i:(\\w+.*))";
 
   public ParsedSql(String sql) {
+    Utils.info("\n----------------- New SQL request ------------------");
+    Utils.info("Raw SQL : " + sql);
     validateAndParse(sql);
-    System.out.println("\n>>: " + this);
+//    Utils.info("Parsed SQL : " + this);
   }
 
   private void validateAndParse(String sql) {
@@ -38,12 +39,12 @@ public class ParsedSql {
     if (!matcher.matches()) {
       Utils.error("User sql \n" + sql + " \ndoesn't match the regexp \n" + regexp);
     } else {
-      System.out.println("General validation : OK");
+      Utils.info("SQL general validation : OK");
     }
-    int i = 1;
-    while (i<=matcher.groupCount()) {
-      System.out.println("group(" + i + "): " + matcher.group(i++));
-    }
+//    int i = 1;
+//    while (i<=matcher.groupCount()) {
+//      Utils.info("group(" + i + "): " + matcher.group(i++));
+//    }
     _fields = matcher.group(2);
     _from = matcher.group(9);
     String whereSql = matcher.group(11);
@@ -54,7 +55,7 @@ public class ParsedSql {
     if (!whereSql.matches(whereRegexp)) {
       Utils.error("The WHERE clause in user's sql \n" + whereSql + " \ndoesn't match the whereRegexp \n" + whereRegexp);
     } else {
-      System.out.println("WHERE validation : OK");
+      Utils.info("SQL WHERE clause validation : OK");
     }
 
     // Translating WHERE part to a Mongo query
@@ -184,15 +185,4 @@ public class ParsedSql {
         + _groupBy + ", \n\t_orderByClause=" + _orderByClause + ", \n\t_skip=" + _skip + ", \n\t_limit=" + _limit + " ]";
   }
 
-  
-  public static void main(String[] args) {
-//    String sql = "SELECT address.zipcode FROM restaurants WHERE address.zipcode=11691 AND address.street=Seagirt Avenue OR restaurant_id=40359480 OR address.street=Beach 25 Street";
-//    String sql = "SELECT address.zipcode FROM restaurants WHERE address.zipcode=11691 AND address.street=Seagirt Avenue OR restaurant_id=40359480 OR address.street=Beach 25 Street ORDER BY restaurant_id DESC";
-//    String sql = "SELECT address.zipcode FROM restaurants WHERE address.zipcode=11691 AND address.street=Seagirt Avenue OR restaurant_id=40359480 OR address.street=Beach 25 Street GROUP BY address.street ORDER BY restaurant_id DESC SKIP 300 LIMIT 100";
-//    String sql = "SELECT address.zipcode FROM restaurants WHERE address.zipcode=11691 AND address.street=Seagirt Avenue OR restaurant_id=40359480 OR address.street=Beach 25 Street ORDER BY restaurant_id DESC LIMIT 100";
-    String sql = "SELECT restaurant_id FROM restaurants WHERE address.zipcode=11691 AND address.street=Seagirt Avenue OR restaurant_id>=40359480 AND restaurant_id<40359485 Order by address.street";
-//    String sql = "SELECT restaurant_id FROM restaurants WHERE address.zipcode=11691 AND address.street=Seagirt Avenue Order by restaurant_id desc";
-    new ParsedSql(sql);
-  }
-  
 }

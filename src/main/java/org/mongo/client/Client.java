@@ -29,6 +29,7 @@ public class Client {
   private String dbName;
   private DB db;
   private ObjectMapper _mapper = new ObjectMapper();
+  private Collection<String> _lastResultSet = new LinkedHashSet<String>();
 
   /*
    * Constructor called by console mode server: the server address port: the
@@ -48,9 +49,6 @@ public class Client {
     this.cg = cg;
   }
 
-  // public void connect(String dbName) {
-  // }
-
   /*
    * To start the dialog
    */
@@ -69,10 +67,6 @@ public class Client {
 
     String msg = "Connection accepted at address: " + Utils.HOST + ":" + Utils.PORT;
     display(msg);
-    // System.err.println(msg);
-
-    // // creates the Thread to listen from the server
-    // new ListenFromServer().start();
 
     // success we inform the caller that it worked
     return true;
@@ -82,8 +76,10 @@ public class Client {
    * To send a message to the console or the GUI
    */
   private void display(String msg) {
-    if (cg == null)
+    if (cg == null) {
+//      _lastResultSet = msg;
       System.out.println(msg); // println in console mode
+    }
     else
       cg.append(msg + "\n"); // append to the ClientGUI JTextArea
   }
@@ -91,16 +87,16 @@ public class Client {
   /*
    * To send a message to the server
    */
-  void query(String sql) {
+  public void query(String sql) {
     try {
       ParsedSql parsedSql = new ParsedSql(sql);
-      display("\n>>" + parsedSql);
+      display("\nParsed SQL : " + parsedSql);
       int maxLength = 10000;
 
       DBCollection collection = db.getCollection(parsedSql.getFrom());
 
       // Map<String, Object> map = new HashMap<>();
-      display("---------------------------------------------------");
+      display("\n---------------------------------------------------");
       display("Search query (SQL):\t " + sql);
       display("Search query (Mongo):\t db." + parsedSql.getFrom() + ".find( " + parsedSql.getWhereClause() + " )");
 
@@ -125,16 +121,28 @@ public class Client {
         sb.append("]");
         sb.insert(0, "[");
         String serverResponse = sb.toString();
-        if (cg.isbPrettifyJson()) serverResponse = prettify(serverResponse);
+        if (cg!=null && cg.isbPrettifyJson() && serverResponse!=null) serverResponse = prettify(serverResponse);
         
         display("\n---------------------------------------------------");
-        display("Search result (unparsed): "
-            + (serverResponse.length() <= maxLength ? serverResponse : serverResponse.substring(0, maxLength) + "..."));
-        display("\nSearch result (parsed):");
-        Collection<String> resultSet = getResultSet(serverResponse, parsedSql.getFields());
-        int i = 1;
-        for (String row : resultSet) {
-          display(" -- [" + i++ + "] " + parsedSql.getFields() + " : " + row);
+        if (serverResponse==null) {
+          display("Search results: NO MATCHING ROWS FOUND");
+          _lastResultSet = new LinkedHashSet<String>();
+          
+        } else {
+          display("Search result (unparsed): "
+              + (serverResponse.length() <= maxLength ? serverResponse : serverResponse.substring(0, maxLength) + "..."));
+          display("\nSearch result (parsed):");
+          Collection<String> resultSet = getResultSet(serverResponse, parsedSql.getFields());
+          int i = 1;
+//          sb = new StringBuilder("\n");
+          for (String row : resultSet) {
+            String s = " -- [" + i++ + "] " + parsedSql.getFields() + " : " + row;
+            display(s);
+//            sb.append(s);
+//            sb.append("\n");
+          }
+//          _lastResultSet = sb.toString();
+          _lastResultSet = resultSet;
         }
         display("======================================================================================================\n\n");
 
@@ -161,7 +169,6 @@ public class Client {
       if (mongo != null)
         mongo.close();
       display("\nMongoClient closed connection");
-//      System.err.println("\nMongoClient closed connection");
     } catch (Exception e) {
     } // not much else I can do
 
@@ -171,15 +178,11 @@ public class Client {
   }
 
   private Collection<String> getResultSet(String json, String projections) throws JsonProcessingException, IOException {
-//    ObjectMapper mapper = new ObjectMapper();
     JsonNode tree = _mapper.readTree(json);
     Collection<String> list = new LinkedHashSet<String>((int) (Math.round(tree.size() / 0.75) + 1));
-    // Collection<String> list = new ArrayList<String>(tree.size());
     int i = 0;
     for (JsonNode node : tree) {
       String row = getResultRow(node, projections);
-      // System.out.println(" ----- [" + i++ + "] " + projections + " : " +
-      // row);
       list.add(row);
     }
     return list;
@@ -206,6 +209,10 @@ public class Client {
     if (node.isArray())
       Utils.error("Projections for arrays are not supported in this version of application");
     return node.toString();
+  }
+
+  public Collection<String> getLastResultSet() {
+    return _lastResultSet;
   }
 
   /*

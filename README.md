@@ -25,8 +25,7 @@ The mongoimport connects to a mongod instance running on localhost on port numbe
 To import data into a mongod instance running on a different host or port, specify the hostname or port by including the --host and the --port options in your mongoimport command.
 
 3
-Run the AlterMongoClient by double-clicking the file "mongoclient-0.0.1-SNAPSHOT-jar-with-dependencies.jar"
-A window entitled "Alternative Mongo Client [Quer..." should pop-up.
+Double-click the file "mongoclient.jar". A program window entitled "Alternative Mongo Client..." should appear.
 
 4
 In this window press "Connect to DB 'test'" button. 
