@@ -59,9 +59,9 @@ public class ClientGUI extends JFrame implements ActionListener {
     northPanel.add(serverAndPort);
 
     // the Label and the TextField
-    label = new JLabel("Paste your SQL query here and press <Enter>", SwingConstants.CENTER);
+    label = new JLabel("Paste an SQL query below and press <Enter>", SwingConstants.CENTER);
     northPanel.add(label);
-    tf = new JTextField("Type SQL query and press <Enter>");
+    tf = new JTextField("Paste an SQL query and press <Enter>");
     tf.setBackground(Color.WHITE);
     northPanel.add(tf);
     add(northPanel, BorderLayout.NORTH);
@@ -112,9 +112,9 @@ public class ClientGUI extends JFrame implements ActionListener {
   void connectionFailed() {
     connect.setEnabled(true);
     disconnect.setEnabled(false);
-    // whoIsIn.setEnabled(false);
-    label.setText("Enter your username below");
-    tf.setText("Anonymous");
+
+    label.setText("Paste an SQL query below and press <Enter>");
+    tf.setText("");
     // reset port number and host name as a construction time
     tfPort.setText("" + defaultPort);
     tfServer.setText(defaultHost);
@@ -167,7 +167,7 @@ public class ClientGUI extends JFrame implements ActionListener {
       if (!client.connect("test"))
         return;
       tf.setText("");
-      label.setText("Enter your query below");
+      label.setText("Paste an SQL query below and press <Enter>");
       connected = true;
 
       // disable login button
