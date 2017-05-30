@@ -45,10 +45,8 @@ public class ClientGUI extends JFrame implements ActionListener {
     JPanel serverAndPort = new JPanel(new GridLayout(1, 5, 1, 3));
     // the two JTextField with default value for server address and port number
     tfServer = new JTextField(host);
-    // tfServer.setEditable(false);
     tfPort = new JTextField("" + port);
     tfPort.setHorizontalAlignment(SwingConstants.RIGHT);
-    // tfPort.setEditable(false);
     tfDbName = new JTextField(defaultDbName);
 
     serverAndPort.add(new JLabel("Server Address:  "));
@@ -61,10 +59,9 @@ public class ClientGUI extends JFrame implements ActionListener {
     northPanel.add(serverAndPort);
 
     // the Label and the TextField
-    label = new JLabel("Enter your username below", SwingConstants.CENTER);
+    label = new JLabel("Paste your SQL query here and press <Enter>", SwingConstants.CENTER);
     northPanel.add(label);
-    tf = new JTextField("Type SQL-expression and press <Enter>");
-    // tf = new JTextArea("Type SQL-expression and press <Enter>", 7, 80);
+    tf = new JTextField("Type SQL query and press <Enter>");
     tf.setBackground(Color.WHITE);
     northPanel.add(tf);
     add(northPanel, BorderLayout.NORTH);
@@ -76,7 +73,7 @@ public class ClientGUI extends JFrame implements ActionListener {
     ta.setEditable(false);
     add(centerPanel, BorderLayout.CENTER);
 
-    // the 3 buttons
+    // the buttons
     connect = new JButton("Connect to DB '" + defaultDbName + "'");
     connect.addActionListener(this);
     disconnect = new JButton("Disconnect");
@@ -86,7 +83,7 @@ public class ClientGUI extends JFrame implements ActionListener {
     exit.addActionListener(this);
     clear = new JButton("Clear");
     clear.addActionListener(this);
-    prettifyJson = new JCheckBox("Prettify server response");
+    prettifyJson = new JCheckBox("Prettify server response"); // for pretty json format
     prettifyJson.addActionListener(this);
 
     JPanel southPanel = new JPanel();

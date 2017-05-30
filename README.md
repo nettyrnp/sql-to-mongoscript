@@ -32,8 +32,9 @@ A window entitled "Alternative Mongo Client [Quer..." should pop-up.
 In this window press "Connect to DB 'test'" button. 
 
 5
-Paste your SQL query into the field entitled "Enter your username below" and press <Enter>.
-For example, you can use one of the following SQL queries:
+Paste your SQL query into the field entitled "Paste your SQL query here..." and press <Enter>.
+
+For example, you can paste one of the following SQL queries:
 	
 	SELECT address.street 
 		FROM restaurants 
@@ -57,7 +58,7 @@ For example, you can use one of the following SQL queries:
 
 
 6
-After pressing <Enter> you should see the result printed in the main text area. 
+After pressing <Enter> you should see the result printed in the main text area ('Center Panel'). 
 
 Example of results for the 1st of the above queries:
 
@@ -75,5 +76,13 @@ Search result (parsed):
  -- [1] restaurant_id : "40359480"
  -- [2] restaurant_id : "41269872"
 
+7
+You can enter other port and host in the topmost left text fields, and press "Connect to DB...", if your MongoDB is running at other IP address. 
+
+You can enter other DB name in the topmost right text field. 
+
+You can also use buttons "Clear" and "Prettify server response". 
  
+ 
+
  
