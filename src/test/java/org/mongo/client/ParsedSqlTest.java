@@ -26,5 +26,5 @@ public class ParsedSqlTest {
     ParsedSql parsedSql = new ParsedSql(sql);
     assertEquals("Wrong extraction of SELECT clause", parsedSql.getFields(), "*");
   }
-
+ 
 }
