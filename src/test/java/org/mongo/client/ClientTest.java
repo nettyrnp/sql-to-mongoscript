@@ -29,6 +29,8 @@ public class ClientTest {
     assertEquals("Wrong extraction of SELECT clause", parsedSql.getFields(), "*");
   }
 
+  /* Uncomment when you have MongoDB running at "127.0.0.1:27017" or other known address 
+   * with the 'primer-dataset.json' db in it.
   @Test
   public void testParsingQuery() {
     String sql = "SELECT restaurant_id FROM restaurants" + 
@@ -47,5 +49,6 @@ public class ClientTest {
     assertTrue("Wrong results", client.getLastResultSet().contains("\"40359480\""));
     assertTrue("Wrong results", client.getLastResultSet().contains("\"41269872\""));
   }
+  */
  
 }
