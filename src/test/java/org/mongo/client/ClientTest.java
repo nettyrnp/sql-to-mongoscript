@@ -34,7 +34,7 @@ public class ClientTest {
    * or other address where the 'primer-dataset.json' DB is placed.
    * 
   @Test
-  public void testParsingQuery() {
+  public void testQuery() {
     String sql = "SELECT restaurant_id FROM restaurants" + 
         "  WHERE address.zipcode=11691" + 
         "    AND address.street=Seagirt Avenue" + 

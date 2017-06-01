@@ -28,12 +28,11 @@ public class Client {
   private MongoClient mongo;
   private String dbName;
   private DB db;
-  private ObjectMapper _mapper = new ObjectMapper();
-  private Collection<String> _lastResultSet = new LinkedHashSet<String>();
+  private ObjectMapper mapper = new ObjectMapper();
+  private Collection<String> lastResultSet = new LinkedHashSet<String>();
 
   /*
-   * Constructor called by console mode server: the server address port: the
-   * port number username: the username
+   * Constructor called by console mode 
    */
   Client() {
     // which calls the common constructor with the GUI set to null
@@ -57,7 +56,7 @@ public class Client {
     // try to connect to the server
     try {
       mongo = new MongoClient(Utils.HOST, Utils.PORT);
-      db = mongo.getDB(dbName);
+      db = mongo.getDB(this.dbName);
     }
     // if it failed not much I can so
     catch (Exception ec) {
@@ -76,10 +75,8 @@ public class Client {
    * To send a message to the console or the GUI
    */
   private void display(String msg) {
-    if (cg == null) {
-//      _lastResultSet = msg;
+    if (cg == null) 
       System.out.println(msg); // println in console mode
-    }
     else
       cg.append(msg + "\n"); // append to the ClientGUI JTextArea
   }
@@ -126,7 +123,7 @@ public class Client {
         display("\n---------------------------------------------------");
         if (serverResponse==null) {
           display("Search results: NO MATCHING ROWS FOUND");
-          _lastResultSet = new LinkedHashSet<String>();
+          lastResultSet = new LinkedHashSet<String>();
           
         } else {
           display("Search result (unparsed): "
@@ -134,15 +131,11 @@ public class Client {
           display("\nSearch result (parsed):");
           Collection<String> resultSet = getResultSet(serverResponse, parsedSql.getFields());
           int i = 1;
-//          sb = new StringBuilder("\n");
           for (String row : resultSet) {
             String s = " -- [" + i++ + "] " + parsedSql.getFields() + " : " + row;
             display(s);
-//            sb.append(s);
-//            sb.append("\n");
           }
-//          _lastResultSet = sb.toString();
-          _lastResultSet = resultSet;
+          lastResultSet = resultSet;
         }
         display("======================================================================================================\n\n");
 
@@ -156,8 +149,8 @@ public class Client {
   }
 
   private String prettify(String jsonStr) throws JsonParseException, JsonMappingException, IOException {
-    Object json = _mapper.readValue(jsonStr, Object.class);
-    String jsonPretty = _mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
+    Object json = mapper.readValue(jsonStr, Object.class);
+    String jsonPretty = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
     return jsonPretty;
   }
 
@@ -178,7 +171,7 @@ public class Client {
   }
 
   private Collection<String> getResultSet(String json, String projections) throws JsonProcessingException, IOException {
-    JsonNode tree = _mapper.readTree(json);
+    JsonNode tree = mapper.readTree(json);
     Collection<String> list = new LinkedHashSet<String>((int) (Math.round(tree.size() / 0.75) + 1));
     int i = 0;
     for (JsonNode node : tree) {
@@ -212,11 +205,11 @@ public class Client {
   }
 
   public Collection<String> getLastResultSet() {
-    return _lastResultSet;
+    return lastResultSet;
   }
 
   /*
-   * To start the Client in console mode use one of the following command > java Client.
+   * To start the Client in console mode use the following command: > java Client.
    * In console mode, if an error occurs the program simply stops. When a GUI is used,
    * the GUI is informed of the disconnection
    */
@@ -254,6 +247,7 @@ public class Client {
         client.query(msg);
       }
     }
+    scan.close();
     // done disconnect
     client.disconnect();
   }

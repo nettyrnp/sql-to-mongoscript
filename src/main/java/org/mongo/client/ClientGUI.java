@@ -31,7 +31,7 @@ public class ClientGUI extends JFrame implements ActionListener {
   private String defaultHost, defaultDbName;
   private boolean bPrettifyJson;
 
-  // Constructor connection receiving a socket number
+  // Constructor connection receiving a host name and a socket number
   public ClientGUI(String host, int port) {
 
     super("Alternative Mongo Client [Quering MongoDB via SQL-scripts]");
@@ -121,7 +121,7 @@ public class ClientGUI extends JFrame implements ActionListener {
     // let the user change them
     tfServer.setEditable(false);
     tfPort.setEditable(false);
-    // don't react to a <CR> after the username
+    // don't react to the user's pressing of <Enter>
     tf.removeActionListener(this);
     connected = false;
   }
@@ -172,9 +172,8 @@ public class ClientGUI extends JFrame implements ActionListener {
 
       // disable login button
       connect.setEnabled(false);
-      // enable the 2 buttons
+      // enable the button
       disconnect.setEnabled(true);
-      // whoIsIn.setEnabled(true);
       // disable the Server and Port JTextField
       tfServer.setEditable(false);
       tfPort.setEditable(false);
@@ -188,7 +187,7 @@ public class ClientGUI extends JFrame implements ActionListener {
     return bPrettifyJson;
   }
 
-  // to start the whole thing the server
+  // to start the whole thing
   public static void main(String[] args) {
     new ClientGUI(Utils.HOST, Utils.PORT);
   }
