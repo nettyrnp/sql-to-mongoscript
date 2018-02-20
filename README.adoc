@@ -1,0 +1,49 @@
+
+== Data Fetching And Persisting Demo Application
+
+The project retrieves the data from REST requests or JMS messages and stores them in a relational or NoSQL DB.
+Application has 3 layers: UI, Service and Data Persistence. Each layer has it's own data structure.
+
+== Structure of UI layer
+
+UI (json)
+[source,javascript]
+----
+{
+    "name" : "string",
+    "phones" : ["string", "string", "string"]
+}
+----
+
+== Structure of Service layer
+
+Service (domain model)
+[source,java,indent=0]
+----
+public class Card {
+    String name;
+    String phones;
+}
+----
+
+== Structure of Data Persistence layer
+
+Data Persistence (row): (id; name; phone)
+
+In domain model all phones are stored in a list as a single String (e.g. "phone1,phone2") within a request body (json).
+But in database the phones are stored in a way, where for each phone there is a separate row
+e.g.,
+(id: 1; name: Oleg; phone: +38096...)
+(id: 2; name: Oleg; phone: +38050...)
+
+The application processes the requests (CRUD operations) and transforms the data structure in both directions:
+API->Domain->Persistence and backward.
+
+== Independence of Data Sources and DBs
+
+Architecture of the application is designed so that it allows switching the UI layer from REST to JMS as well as
+switching the Data storage layer from RDBMS to NoSQL.
+
+== Tech Stack
+Java 8, Spring
+
