@@ -1,49 +1,84 @@
 
-== Data Fetching And Persisting Demo Application
+== SQL to mongo script MongoDB client
 
-The project retrieves the data from REST requests or JMS messages and stores them in a relational or NoSQL DB.
-Application has 3 layers: UI, Service and Data Persistence. Each layer has it's own data structure.
+The project is an alternative MongoDB client, able to convert SQL to mongo script
 
-== Structure of UI layer
+== Prerequisites
 
-UI (json)
-[source,javascript]
-----
-{
-    "name" : "string",
-    "phones" : ["string", "string", "string"]
-}
-----
+You must have a running mongod instance in order to import data into the database.
 
-== Structure of Service layer
+== Procedure
 
-Service (domain model)
-[source,java,indent=0]
-----
-public class Card {
-    String name;
-    String phones;
-}
-----
+=== 1. Retrieve the restaurants data.
 
-== Structure of Data Persistence layer
+Retrieve the dataset from https://raw.githubusercontent.com/mongodb/docs-assets/primer-dataset/primer-dataset.json and save to a file named primer-dataset.json.
 
-Data Persistence (row): (id; name; phone)
+=== 2. Import data into the collection.
 
-In domain model all phones are stored in a list as a single String (e.g. "phone1,phone2") within a request body (json).
-But in database the phones are stored in a way, where for each phone there is a separate row
-e.g.,
-(id: 1; name: Oleg; phone: +38096...)
-(id: 2; name: Oleg; phone: +38050...)
+In the system shell or command prompt, use mongoimport to insert the documents into the restaurants collection in the test database. If the collection already exists in the test database, the operation will drop the restaurants collection first.
 
-The application processes the requests (CRUD operations) and transforms the data structure in both directions:
-API->Domain->Persistence and backward.
+mongoimport --db test --collection restaurants --drop --file ~/downloads/primer-dataset.json
+The mongoimport connects to a mongod instance running on localhost on port number 27017. The --file option provides the path to the data to import, in this case, ~/downloads/primer-dataset.json.
 
-== Independence of Data Sources and DBs
+To import data into a mongod instance running on a different host or port, specify the hostname or port by including the --host and the --port options in your mongoimport command.
 
-Architecture of the application is designed so that it allows switching the UI layer from REST to JMS as well as
-switching the Data storage layer from RDBMS to NoSQL.
+=== 3. Download "sql-to-mongoscript", go to the "sql-to-mongoscript" folder and run the command "mvn clean package" (you should have Maven installed before this).
+In folder "target" double-click the file "mongoclient-0.0.1-SNAPSHOT-jar-with-dependencies.jar".
+A program window entitled "Alternative Mongo Client..." should pop-up.
 
-== Tech Stack
-Java 8, Spring
+=== 4. In the window press "Connect to DB 'test'" button. 
 
+=== 5. Paste your SQL query into the field entitled "Paste your SQL query here..." and press <Enter>.
+
+For example, you can paste one of the following SQL queries:
+	
+	SELECT address.street 
+		FROM restaurants 
+		WHERE address.zipcode=11691 AND address.street=Seagirt Avenue 
+			OR restaurant_id>=41269687 AND restaurant_id<41269772 Order by restaurant_id desc 
+
+	SELECT restaurant_id FROM restaurants 
+		WHERE address.zipcode=11691 
+			AND address.street=Seagirt Avenue 
+			OR restaurant_id>=40359480 
+			AND restaurant_id<40359485 
+			Order by address.zipcode
+
+	SELECT restaurant_id FROM restaurants WHERE address.zipcode=11691 AND address.street=Seagirt Avenue OR restaurant_id>=41269687 AND restaurant_id<41269872 Order by restaurant_id desc
+	
+	SELECT address.zipcode FROM restaurants WHERE address.zipcode=11691 AND address.street=Seagirt Avenue OR restaurant_id=40359480 OR address.street=Beach 25 Street GROUP BY address.street ORDER BY restaurant_id DESC SKIP 1 LIMIT 2
+	
+	SELECT address.street FROM restaurants WHERE address.zipcode=11691 AND address.street=Seagirt Avenue OR restaurant_id>=40359480 AND restaurant_id<40359580
+	
+	SELECT address.street FROM restaurants WHERE address.zipcode=11691 AND address.street=Seagirt Avenue OR restaurant_id>=40359480 AND restaurant_id<40359485 Order by address.zipcode
+
+
+
+=== 6. After pressing <Enter> you should see the result printed in the main text area ('Center Panel'). 
+
+Example of results for the 1st of the above queries:
+
+	Search result (parsed):
+	 -- [1] address.street : "Seagirt Avenue"
+	 -- [2] address.street : "Jericho Turnpike"
+	 -- [3] address.street : "West   34 Street"
+	 -- [4] address.street : "46 Street"
+	 -- [5] address.street : "Madison Avenue"
+	 -- [6] address.street : "3 Avenue"
+
+Example of results for the 2nd of the above queries:
+
+	Search result (parsed):
+	 -- [1] restaurant_id : "40359480"
+	 -- [2] restaurant_id : "41269872"
+
+
+=== 7. You can enter other port and host in the topmost left text fields, and press "Connect to DB...", if your MongoDB is running at other IP address. 
+
+You can enter other DB name in the topmost right text field. 
+
+You can also use buttons "Clear" and "Prettify server response". 
+ 
+ 
+
+ 
